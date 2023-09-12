@@ -184,21 +184,21 @@ gestion_activite::~gestion_activite()
 
 void gestion_activite::on_pb_ajouter_clicked()
 {
-    // Reset error labels to empty
+    // Réinitialisez les étiquettes d'erreur à vide
     ui->lblErreurId->setText("");
     ui->lblErreurTitre->setText("");
     ui->lblErreurType->setText("");
     ui->lblErreurDate->setText("");
     ui->lblErreurNbplaces->setText("");
 
-    // Retrieve input values
+    // Récupérez les valeurs d'entrée
     QString id = ui->le_id->text();
     QString titre = ui->le_titre->text();
     QString type = ui->le_type->currentText();
     QString date_act = ui->le_date->text();
     QString nbplaces = ui->le_nbplaces->text();
 
-    // Validate input fields
+    // Validez les champs d'entrée
     bool isValid = true;
 
     if (id.isEmpty()) {
@@ -225,8 +225,7 @@ void gestion_activite::on_pb_ajouter_clicked()
         isValid = false;
     }
 
-
-    // Add a check for the existence of the ID in the database
+    // Ajouter une vérification de l'existence de l'ID dans la base de données
     QSqlQuery checkQuery;
     checkQuery.prepare("SELECT id FROM Activite WHERE id = :id");
     checkQuery.bindValue(":id", id);
@@ -235,29 +234,96 @@ void gestion_activite::on_pb_ajouter_clicked()
         isValid = false;
     }
 
-    // Continue with other input validations...
+    // Continuez avec les autres validations d'entrée...
 
     if (isValid) {
-        // If the input is valid and the ID doesn't exist, proceed with adding the activity
+        // Si l'entrée est valide et que l'ID n'existe pas, procédez à l'ajout de l'activité
         Activite A(id, titre, type, date_act, nbplaces);
 
         QSqlQuery query;
         bool test = A.ajouter();
         if (test) {
-            ui->tableView->setModel(A.afficher()); // refresh
+            ui->tableView->setModel(A.afficher()); // Rafraîchir la vue
 
             QMessageBox::information(nullptr, QObject::tr("Ajout activite"),
                 QObject::tr("Activite ajoutée avec succès.\n"
-                            "Click Cancel to exit."), QMessageBox::Cancel);
+                            "Cliquez sur Annuler pour quitter."), QMessageBox::Cancel);
+
+            QFile file("C:/Users/ismae/OneDrive/Documents/session_septembre/img/historique.txt");
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+                qDebug() << "Erreur lors de l'ouverture du fichier historique.txt";
+                return;
+            }
+            QTextStream cout(&file);
+            QString d_info = QDateTime::currentDateTime().toString();
+            QString message2 = d_info + " - Une activité a été ajoutée avec l'ID " + id + "\n";
+            cout << message2;
         } else {
             QMessageBox::critical(nullptr, QObject::tr("Ajout activite"),
                 QObject::tr("Erreur lors de l'ajout de l'activite.\n"
-                            "Click Cancel to exit."), QMessageBox::Cancel);
+                            "Cliquez sur Annuler pour quitter."), QMessageBox::Cancel);
         }
     } else {
-        // Handle invalid input or existing ID error
+        // Gérez l'erreur d'entrée invalide ou d'ID existant
     }
 }
+
+
+
+void gestion_activite::on_pushButton_modifier_clicked()
+{
+
+
+  // Récupérez les valeurs d'entrée
+  QString id = ui->le_id->text();
+  QString titre = ui->le_titre->text();
+  QString type = ui->le_type->currentText();
+  QString date_act = ui->le_date->text();
+  QString nbplaces = ui->le_nbplaces->text();
+
+  // Vérification si l'ID existe
+  QSqlQuery checkQuery;
+  checkQuery.prepare("SELECT * FROM activite WHERE id = :id");
+  checkQuery.bindValue(":id", id);
+
+  if (!checkQuery.exec())
+  {
+      // Erreur lors de l'exécution de la requête
+      qDebug() << "Erreur lors de la vérification de l'ID :" << checkQuery.lastError().text();
+      return;
+  }
+
+  if (!checkQuery.next())
+  {
+      // L'ID n'existe pas, affichez un message d'erreur
+      QMessageBox::critical(nullptr, QObject::tr("Modifier Activite"),
+                            QObject::tr("L'ID n'existe pas dans la base de données.\n"
+                                        "Click Cancel to exit."), QMessageBox::Cancel);
+      return;
+  }
+
+  // L'ID existe, vous pouvez maintenant effectuer la modification
+  Activite A(id, titre, type, date_act, nbplaces);
+
+  QSqlQuery query;
+
+  bool test = A.modifier(id);
+  if (test)
+  {
+      ui->tableView->setModel(A.afficher()); // refresh
+
+      QMessageBox::information(nullptr, QObject::tr("Modifier Activite"),
+                               QObject::tr("Activite Modifiée.\n"
+                                           "Click Cancel to exit."), QMessageBox::Cancel);
+  }
+  else
+  {
+      QMessageBox::critical(nullptr, QObject::tr("Modifier Activite"),
+                            QObject::tr("Erreur !.\n"
+                                        "Click Cancel to exit."), QMessageBox::Cancel);
+  }
+}
+
 
 
 
@@ -347,77 +413,41 @@ void gestion_activite::on_pushButton_supprimer_clicked()
 {
     QString ID = ui->lineEdit_supp->text();
 
-    // Check if the ID exists before attempting to delete
-    if (A.checkIfIdExists(ID)) { // Replace "checkIfIdExists" with your actual function to check ID existence
+    // Vérifiez si l'ID existe avant de tenter de le supprimer
+    if (A.checkIfIdExists(ID)) { // Remplacez "checkIfIdExists" par votre fonction réelle pour vérifier l'existence de l'ID
         bool test = A.supprimer(ID);
         ui->tableView->setModel(A.afficher());
         if (test) {
             QMessageBox::information(nullptr, QObject::tr("Suppression réussie"),
                 QObject::tr("Suppression effectuée avec succès.\n"
-                            "Click Cancel to exit."), QMessageBox::Cancel);
+                            "Cliquez sur Annuler pour quitter."), QMessageBox::Cancel);
+
+            QFile file("C:/Users/ismae/OneDrive/Documents/session_septembre/img/historique.txt");
+
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+                qDebug() << "Erreur lors de l'ouverture du fichier historique.txt";
+                return;
+            }
+
+            QTextStream cout(&file);
+
+            QString d_info = QDateTime::currentDateTime().toString();
+
+            QString message2 = d_info + " - Une activité a été supprimée avec l'ID " + ID + "\n";
+
+            cout << message2;
         } else {
             QMessageBox::critical(nullptr, QObject::tr("Erreur de suppression"),
                 QObject::tr("Erreur lors de la suppression de l'activité.\n"
-                            "Click Cancel to exit."), QMessageBox::Cancel);
+                            "Cliquez sur Annuler pour quitter."), QMessageBox::Cancel);
         }
     } else {
         QMessageBox::critical(nullptr, QObject::tr("ID introuvable"),
             QObject::tr("L'ID que vous avez saisi n'existe pas.\n"
-                        "Click Cancel to exit."), QMessageBox::Cancel);
+                        "Cliquez sur Annuler pour quitter."), QMessageBox::Cancel);
     }
 }
 
-
-void gestion_activite::on_pushButton_modifier_clicked()
-{
-    QString cin = ui->le_id->text();
-    QString nom = ui->le_titre->text();
-    QString prenom = ui->le_type->currentText();
-    QString matiere = ui->le_date->text();
-    QString salaire = ui->le_nbplaces->text();
-
-    // Vérification si l'ID existe
-    QSqlQuery checkQuery;
-    checkQuery.prepare("SELECT * FROM activite WHERE id = :id");
-    checkQuery.bindValue(":id", cin);
-
-    if (!checkQuery.exec())
-    {
-        // Erreur lors de l'exécution de la requête
-        qDebug() << "Erreur lors de la vérification de l'ID :" << checkQuery.lastError().text();
-        return;
-    }
-
-    if (!checkQuery.next())
-    {
-        // L'ID n'existe pas, affichez un message d'erreur
-        QMessageBox::critical(nullptr, QObject::tr("Modifier Activite"),
-                              QObject::tr("L'ID n'existe pas.\n"
-                                          "Click Cancel to exit."), QMessageBox::Cancel);
-        return;
-    }
-
-    // L'ID existe, vous pouvez maintenant effectuer la modification
-    Activite A(cin, nom, prenom, matiere, salaire);
-
-    QSqlQuery query;
-
-    bool test = A.modifier(cin);
-    if (test)
-    {
-        ui->tableView->setModel(A.afficher()); // refresh
-
-        QMessageBox::information(nullptr, QObject::tr("Modifier Activite"),
-                                 QObject::tr("Activite Modifiée.\n"
-                                             "Click Cancel to exit."), QMessageBox::Cancel);
-    }
-    else
-    {
-        QMessageBox::critical(nullptr, QObject::tr("Modifier Activite"),
-                              QObject::tr("Erreur !.\n"
-                                          "Click Cancel to exit."), QMessageBox::Cancel);
-    }
-}
 
 
 
@@ -522,4 +552,19 @@ void gestion_activite::on_PDF_clicked()
                QMessageBox::information(this, QObject::tr("PDF Enregistré!"),
                    QObject::tr("PDF Enregistré!.\n" "Click Cancel to exit."), QMessageBox::Cancel);
 
+}
+
+void gestion_activite::on_Perso_push_Supprimer_10_clicked()
+{
+    QFile file("C:/Users/ismae/OneDrive/Documents/session_septembre/img/historique.txt"); // Remplacez "chemin/vers/votre/fichier.txt" par le chemin de votre fichier texte
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+        QString text = in.readAll();
+        file.close();
+
+        // Affichez le texte dans le QTextBrowser
+        ui->histo->setPlainText(text); // Remplacez "textBrowser" par le nom de votre QTextBrowser
+    } else {
+        qDebug() << "Impossible d'ouvrir le fichier.";
+    }
 }

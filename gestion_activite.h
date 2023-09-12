@@ -31,6 +31,8 @@ private slots:
 
     void on_PDF_clicked();
 
+    void on_Perso_push_Supprimer_10_clicked();
+
 private:
     Ui::gestion_activite *ui;
     Activite A;

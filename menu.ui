@@ -63,7 +63,7 @@ border-radius:20px !important;</string>
 border-radius:20px !important;</string>
    </property>
    <property name="text">
-    <string>Enseignant</string>
+    <string>Activite</string>
    </property>
   </widget>
  </widget>

@@ -81,13 +81,15 @@ bool Activite::supprimer(QString ID)
          return query.exec();
 }
 
-bool Activite::modifier(QString ID)
+
+
+bool Activite::modifier(QString id)
 {
 QSqlQuery query;
-        QString res= ID;
+        QString res= id;
 
 
-        query.prepare("UPDATE Activite SET id=:id,titre=:titre,type=:type,date_act=:date_act,nbplaces=:nbplaces where ID=:ID");
+        query.prepare("UPDATE Activite SET titre=:titre,type=:type,date_act=:date_act,nbplaces=:nbplaces where id=:id");
         query.bindValue(":id",id);
             query.bindValue(":titre",titre);
              query.bindValue(":type",type);
@@ -98,11 +100,11 @@ QSqlQuery query;
 
         return    query.exec();
 }
-bool Activite::checkIfIdExists(QString ID)
+bool Activite::checkIfIdExists(QString id)
 {
     QSqlQuery query;
     query.prepare("SELECT id FROM Activite WHERE id = :id");
-    query.bindValue(":id", ID);
+    query.bindValue(":id", id);
 
     if (query.exec() && query.next()) {
         // The ID exists in the database

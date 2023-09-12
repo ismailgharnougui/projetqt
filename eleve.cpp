@@ -16,13 +16,13 @@ Eleve::Eleve()
 {
 
 }
-Eleve::Eleve(QString ID,QString NOM,QString PRENOM,QString DATEN,QString SEXE,QString CLASSE)
+Eleve::Eleve(QString ID,QString NOM,QString PRENOM,QString DATEN,QString SEXE,QString AGE)
 {this->ID=ID;
     this->NOM = NOM;
     this->PRENOM = PRENOM;
     this->DATEN = DATEN;
     this->SEXE = SEXE;
-    this->CLASSE = CLASSE;
+    this->AGE = AGE;
 
 }
 
@@ -31,14 +31,14 @@ Eleve::Eleve(QString ID,QString NOM,QString PRENOM,QString DATEN,QString SEXE,QS
   QString Eleve::getPrenom(){return PRENOM;}
   QString Eleve::getDateN(){return DATEN;}
   QString Eleve::getSexe(){return SEXE;}
-  QString Eleve::getClasse(){return CLASSE;}
+  QString Eleve::getClasse(){return AGE;}
 
   void Eleve::setID(QString ID){this->ID=ID;}
   void Eleve::setNom(QString NOM){this->NOM=NOM;}
   void Eleve::setPrenom(QString PRENOM){this->PRENOM=PRENOM;}
   void Eleve::setDateN(QString DATEN){this->DATEN=DATEN;}
   void Eleve::setSexe(QString SEXE ){this->SEXE=SEXE;}
-  void Eleve::setClasse(QString CLASSE){this->CLASSE=CLASSE;}
+  void Eleve::setClasse(QString AGE){this->AGE=AGE;}
 
 
 
@@ -47,14 +47,14 @@ bool Eleve::ajouter()
 
     QSqlQuery query;
 
-    query.prepare("INSERT INTO eleve (ID,NOM,PRENOM,DATEN,SEXE,CLASSE)"
-                  "values(:ID,:NOM,:PRENOM,DATEN,:SEXE,:CLASSE)");
-    query.bindValue(":ID",ID);
+    query.prepare("INSERT INTO eleve (NUMINSC,NOM,PRENOM,DATEN,SEXE,AGE)"
+                  "values(:NUMINSC,:NOM,:PRENOM,:DATEN,:SEXE,:AGE)");
+    query.bindValue(":NUMINSC",ID);
         query.bindValue(":NOM",NOM);
          query.bindValue(":PRENOM",PRENOM);
          query.bindValue(":DATEN",DATEN);
          query.bindValue(":SEXE",SEXE);
-         query.bindValue(":CLASSE",CLASSE);
+         query.bindValue(":AGE",AGE);
 
 
           return query.exec();
@@ -71,7 +71,7 @@ QSqlQueryModel * Eleve::afficher(){
     model->setHeaderData(2,Qt::Horizontal,QObject::tr("PRENOM"));
     model->setHeaderData(3,Qt::Horizontal,QObject::tr("DATEN"));
     model->setHeaderData(4,Qt::Horizontal,QObject::tr("SEXE"));
-    model->setHeaderData(5,Qt::Horizontal,QObject::tr("CLASSE"));
+    model->setHeaderData(5,Qt::Horizontal,QObject::tr("AGE"));
 
 
     return model;
@@ -81,7 +81,7 @@ bool Eleve::supprimer(QString ID)
 {
     QSqlQuery query;
          QString res=ID;
-         query.prepare("Delete from ELEVE where ID=:ID");
+         query.prepare("Delete from ELEVE where NUMINSC=:NUMINSC");
          query.bindValue(":ID",res);
          return query.exec();
 }
@@ -92,13 +92,13 @@ QSqlQuery query;
         QString res= ID;
 
 
-        query.prepare("UPDATE eleve SET NOM=:NOM,PRENOM=:PRENOM,DATEN=:DATEN,SEXE=:SEXE,CLASSE=:CLASSE where ID=:ID");
+        query.prepare("UPDATE eleve SET NOM=:NOM,PRENOM=:PRENOM,DATEN=:DATEN,SEXE=:SEXE,AGE=:AGE where NUMINSC=:NUMINSC");
         query.bindValue(":NUMINSC", ID);
         query.bindValue(":NOM",NOM);
          query.bindValue(":PRENOM",PRENOM);
          query.bindValue(":DATEN",DATEN);
          query.bindValue(":SEXE",SEXE);
-          query.bindValue(":CLASSE",CLASSE);
+          query.bindValue(":AGE",AGE);
 
 
         return    query.exec();

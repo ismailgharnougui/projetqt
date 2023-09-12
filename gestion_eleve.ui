@@ -261,7 +261,7 @@ border: none;
       <item>
        <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>Classe</string>
+         <string>AGE</string>
         </property>
        </widget>
       </item>
@@ -599,6 +599,11 @@ border: none;
       </rect>
      </property>
     </widget>
+   </widget>
+   <widget class="QWidget" name="tab_5">
+    <attribute name="title">
+     <string>Page</string>
+    </attribute>
    </widget>
    <widget class="QWidget" name="tab_3">
     <attribute name="title">

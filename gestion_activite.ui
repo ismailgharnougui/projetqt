@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -9330,6 +9330,85 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
      <property name="placeholderText">
       <string>subject</string>
      </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_4">
+    <attribute name="title">
+     <string>Page</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_9">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>20</y>
+       <width>611</width>
+       <height>501</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {
+	background: rgba(64,66,226,20); 
+    border: 2px solid;
+	border-top-right-radius: 7px;
+	border-bottom-right-radius: 7px;
+	border-bottom-left-radius: 7px;
+    border-color: rgba(199, 153, 207, 200);
+    margin-top: 22px;
+}
+QGroupBox::title  {
+    background-color: rgba(64,66,226,100);
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 5px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}</string>
+     </property>
+     <property name="title">
+      <string>Ajouter Salle</string>
+     </property>
+     <widget class="QPushButton" name="Perso_push_Supprimer_10">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>211</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Palatino Linotype</family>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+background-color: rgba(254,179,177,255);
+border-radius: 10px;
+border: 2px solid rgba(254,179,177,200);
+}
+QPushButton:hover {
+background-color: rgba(233,96,90,255);
+}</string>
+      </property>
+      <property name="text">
+       <string>Notre historique</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="histo">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>60</y>
+        <width>551</width>
+        <height>401</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>

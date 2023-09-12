@@ -46,7 +46,7 @@ class Eleve
         QSqlQueryModel *trier(QString);
 
 private:
-        QString ID,NOM,PRENOM,SEXE,CLASSE,DATEN;
+        QString ID,NOM,PRENOM,SEXE,AGE,DATEN;
 
 
 };
